@@ -47,16 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="common.cs" />
+    <Compile Include="Atomic.cs" />
+    <Compile Include="Common.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Images.cs" />
+    <Compile Include="ImagesBase.cs" />
     <Compile Include="InputImages.cs" />
-    <Compile Include="Paint.cs" />
     <Compile Include="Painter.cs" />
     <Compile Include="Params.cs" />
     <Compile Include="Program.cs" />

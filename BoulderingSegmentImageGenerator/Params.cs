@@ -10,13 +10,27 @@ namespace BoulderingSegmentImageGenerator
         public const string SegmentImageFolderName = "segment";
 
         // 処理する画像サイズ
-        public const int ImgWidth = 1000;
-        public const int ImgHeight = 1000;
+        public const int ImgWidth = 500;
+        public const int ImgHeight = 500;
 
         // セグメンテーションの色
-        public static readonly Color BackgroundColor = Color.Black;
-        public static readonly Color HoldColor = Color.Black;
-        public static readonly Color VolumeColor = Color.Black;
+        public static readonly Color BackgroundColor = Color.Red;
+        public static readonly Color HoldColor = Color.Green;
+        public static readonly Color VolumeColor = Color.Blue;
 
+    }
+    public enum HoldsType_t
+    {
+        Holds,
+        Volume,
+        Background,
+    }
+
+    public enum PaintSize_t
+    {
+        pt_1 = 1,
+        pt_3 = 3,
+        pt_5 = 5,
+        pt_10 = 10,
     }
 }
