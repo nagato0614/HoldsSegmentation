@@ -15,7 +15,6 @@ namespace BoulderingSegmentImageGenerator
         public Painter(string InputImageFolderPath, Point PictureBoxLocation)
         {
             this.originalImageFolderPath = InputImageFolderPath;
-            this.atomic = new Atomic();
             this.pen = new Pen(Params.HoldColor, 1);
             Init();
         }
@@ -25,6 +24,7 @@ namespace BoulderingSegmentImageGenerator
         }
 
 
+        // 初期化
         private void Init()
         {
             CreateWorkSpace();
@@ -41,6 +41,7 @@ namespace BoulderingSegmentImageGenerator
             UpdateImage();
         }
 
+        // input, sengment 画像をファイルから読み込み
         public void LoadCurrentImage()
         {
             this.currentInputImage = this.inputImages.GetCurrentImage();
@@ -84,6 +85,7 @@ namespace BoulderingSegmentImageGenerator
             Debug.WriteLine(newPath);
         }
 
+        // ペンの色を変更
         public void ChangePenColor(Color c)
         {
             pen.Color = c;
@@ -110,10 +112,12 @@ namespace BoulderingSegmentImageGenerator
 
 
             // 入力画像とセグメント画像を合成.
+            // 更に画像を拡大縮小 & 移動
             using (var g = Graphics.FromImage(inImg))
             {
                 g.CompositingMode = CompositingMode.SourceOver;
                 g.DrawImage(segImg, 0, 0, segImg.Width, segImg.Height);
+                g.Transform = matrix;
             }
 
             this.processedImage = inImg;
@@ -134,6 +138,7 @@ namespace BoulderingSegmentImageGenerator
             this.currentSegmentImage.RotateFlip(RotateFlipType.Rotate270FlipNone);
         }
 
+        // 現在処理している画像を一旦保存する
         public void SaveImage()
         {
             this.inputImages.SaveCurrentImage();
@@ -174,6 +179,7 @@ namespace BoulderingSegmentImageGenerator
             return this.InputAlpha;
         }
 
+        // 次の画像を current iamge にセットする
         public void NextImage()
         {
             this.SaveImage();
@@ -184,8 +190,7 @@ namespace BoulderingSegmentImageGenerator
             this.strokes = new Stack<List<Point>>();
         }
 
-
-
+        // 前の画像を current iamge にセットする
         public void PrevImage()
         {
             this.SaveImage();
@@ -196,8 +201,20 @@ namespace BoulderingSegmentImageGenerator
             this.strokes = new Stack<List<Point>>();
         }
 
+        // pictureboxが右クリックされた時 (画像を移動させる)
+        public void MouseDownRight(Point p)
+        {
+            Debug.WriteLine("Right Button is down");
+            matrix.Reset();
+            UpdateImage();
+
+            oldPoint.X = p.X;
+            oldPoint.Y = p.Y;
+            rightButtonDown = true;
+        }
+
         // pictureboxが押されたときの処理
-        public void MouseDown(Point p)
+        public void MouseDownLeft(Point p)
         {
 
             Point drawPoint = p;
@@ -220,7 +237,7 @@ namespace BoulderingSegmentImageGenerator
         }
 
         // pictureboxからマウスが話されたとき
-        public void MouseUp()
+        public void MouseUpLeft()
         {
             foreach (var p in strokes.Peek())
             {
@@ -229,16 +246,32 @@ namespace BoulderingSegmentImageGenerator
             strokes.Pop();
         }
 
+        public void MouseUpRight()
+        {
+            rightButtonDown = false;
+        }
+
         // pictureBoxでマウスを押下したあと動かした場合の処理
-        public void MouseMove(Point p)
+        public void MouseMoveLeft(Point p)
         {
             Point drawPoint = p;
 
-            // ボタンが押されていない場合は処理を終了
-            if (Control.MouseButtons == MouseButtons.None)
+            // 左クリック出ない場合は処理を行わない
+            if (Control.MouseButtons != MouseButtons.Left)
                 return;
             this.strokes.Peek().Add(drawPoint);
             this.UpdateImage();
+        }
+
+        // マウスが移動されたときの処理, 移動された距離に合わせて画像をずらす.
+        public void MouseMoveRight(Point p)
+        {
+            if (!rightButtonDown)
+                return;
+
+            matrix.Translate(p.X - oldPoint.X, p.Y - oldPoint.Y, MatrixOrder.Append);
+            UpdateImage();
+            oldPoint = p;
         }
 
 
@@ -255,12 +288,14 @@ namespace BoulderingSegmentImageGenerator
             }
         }
 
+        // ラジオボタンでホールドのタイプを指定する.
         public void SetHoldsType(HoldsType_t t)
         {
             this.holdsType = t;
             SetColor(this.holdsType);
         }
 
+        // ラジオボタンの入力に応じてペンの色を指定する
         public void SetColor(HoldsType_t t)
         {
             Color c;
@@ -274,12 +309,43 @@ namespace BoulderingSegmentImageGenerator
             pen.Color = c;
         }
 
+        public void ZoomPicture(Point p, int zoom)
+        {
+            // ポインタで指定した位置を原点に移動
+            matrix.Translate(-p.X, -p.Y, MatrixOrder.Append);
+
+            // 拡大
+            if (zoom > 0)
+            {
+                if (matrix.Elements[0] < 100)
+                {
+                    matrix.Scale(1.5f, 1.5f, MatrixOrder.Append);
+                }
+            }
+            // 縮小
+            else
+            {
+                if (matrix.Elements[0] > 0.01)
+                {
+                    matrix.Scale(1.0f / 1.5f, 1.0f / 1.5f, MatrixOrder.Append);
+                }
+            }
+
+            // 原点からポインタへ指定した位置へ移動
+            matrix.Translate(p.X, p.Y, MatrixOrder.Append);
+            UpdateImage();
+        }
+
+        // ペンの幅を指定する
         public void SetPenSize(int s)
         {
             this.pen.Width = s;
         }
 
+        // 線を描くためにマウスの軌跡を保存する
         private Stack<List<Point>> strokes = new Stack<List<Point>>();
+
+        // 線を描くためのペン
         private Pen pen;
 
         // セグメント画像のアルファ値
@@ -294,6 +360,7 @@ namespace BoulderingSegmentImageGenerator
         // 現在処理している入力画像フォルダ
         private InputImages inputImages;
 
+        // 現在処理している画像
         private Bitmap currentInputImage;
         private Bitmap currentSegmentImage;
 
@@ -306,9 +373,12 @@ namespace BoulderingSegmentImageGenerator
         // 新しく生成した画像が入っているフォルダ
         private string workspaceFolderPath;
 
-        // 非同期処理用
-        private Atomic atomic;
-
+        // 現在選択しているホールドのタイプ
         private HoldsType_t holdsType;
+
+        // 拡大縮小の変換行列
+        private Matrix matrix = new Matrix();
+        private PointF oldPoint = PointF.Empty;
+        private bool rightButtonDown = false;
     }
 }

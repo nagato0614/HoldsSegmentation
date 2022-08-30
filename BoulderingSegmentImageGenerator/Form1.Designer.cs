@@ -48,6 +48,7 @@
             this.SaveButton = new System.Windows.Forms.Button();
             this.NextButton = new System.Windows.Forms.Button();
             this.PrevButton = new System.Windows.Forms.Button();
+            this.ResetButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.InputImage)).BeginInit();
             this.HoldsType.SuspendLayout();
             this.PaintSizeBox.SuspendLayout();
@@ -286,12 +287,24 @@
             this.PrevButton.UseVisualStyleBackColor = true;
             this.PrevButton.Click += new System.EventHandler(this.PrevButton_Click);
             // 
+            // ResetButton
+            // 
+            this.ResetButton.Font = new System.Drawing.Font("Myrica M", 11F);
+            this.ResetButton.Location = new System.Drawing.Point(18, 568);
+            this.ResetButton.Name = "ResetButton";
+            this.ResetButton.Size = new System.Drawing.Size(132, 34);
+            this.ResetButton.TabIndex = 24;
+            this.ResetButton.Text = "ResetImage";
+            this.ResetButton.UseVisualStyleBackColor = true;
+            this.ResetButton.Click += new System.EventHandler(this.ResetButton_Click);
+            // 
             // BoulderingSegmentImageGenerator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1958, 1344);
+            this.Controls.Add(this.ResetButton);
             this.Controls.Add(this.PrevButton);
             this.Controls.Add(this.NextButton);
             this.Controls.Add(this.SaveButton);
@@ -349,6 +362,7 @@
         private System.Windows.Forms.Button NextButton;
         private System.Windows.Forms.Button PrevButton;
         private System.Windows.Forms.TrackBar paintSizeBar;
+        private System.Windows.Forms.Button ResetButton;
     }
 }
 

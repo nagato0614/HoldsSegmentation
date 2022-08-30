@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 
 namespace BoulderingSegmentImageGenerator
 {
@@ -82,37 +83,63 @@ namespace BoulderingSegmentImageGenerator
 
         private void InputImage_Click(object sender, EventArgs e)
         {
-            if (painter != null)
-            {
-            }
         }
 
         private void InputImage_MouseWheel(object sender, MouseEventArgs e)
         {
+            if (painter != null)
+            {
+                painter.ZoomPicture(ConvertCoordinates(e.Location), e.Delta);
+            }
         }
 
         private void InputImage_MouseDown(object sender, MouseEventArgs e)
         {
-            if (painter != null)
+            if (painter == null)
+                return;
+            if (e.Button == MouseButtons.Left)
             {
-                painter.MouseDown(ConvertCoordinates(e.Location));
+                painter.MouseDownLeft(ConvertCoordinates(e.Location));
                 InputImage.Update();
             }
+            else if (e.Button == MouseButtons.Right)
+            {
+                painter.MouseDownRight(ConvertCoordinates(e.Location));
+                InputImage.Update();
+            }
+
         }
 
+        // picturebox内でマウスボタンが押された後にマウスボタンが離された時
         private void InputImage_MouseUp(object sender, MouseEventArgs e)
         {
-            if (painter != null)
+            if (painter == null)
+                return;
+
+            if (e.Button == MouseButtons.Left)
             {
-                painter.MouseUp();
+                painter.MouseUpLeft();
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                painter.MouseUpRight();
             }
         }
 
+        // pictureBox内でマウスドラッグされたときの処理, 左右同時押しには未対応
         private void InputImage_MouseMove(object sender, MouseEventArgs e)
         {
-            if (painter != null)
+            if (painter == null)
+                return;
+
+            if (e.Button == MouseButtons.Left)
             {
-                painter.MouseMove(ConvertCoordinates(e.Location));
+                painter.MouseMoveLeft(ConvertCoordinates(e.Location));
+                InputImage.Update();
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                painter.MouseMoveRight(ConvertCoordinates(e.Location));
                 InputImage.Update();
             }
         }
@@ -268,7 +295,9 @@ namespace BoulderingSegmentImageGenerator
             return new Point(X0, Y0);
         }
 
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
 
-
+        }
     }
 }

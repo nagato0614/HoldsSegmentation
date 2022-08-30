@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{523308F7-C899-4F2C-8540-F45F8B6C8FC2}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BoulderingSegment", "BoulderingSegment\BoulderingSegment.pyproj", "{4F1BF48E-171B-4F69-A161-40CF353D7A6D}"
