@@ -44,6 +44,7 @@ namespace BoulderingSegmentImageGenerator
                 var filename = $"{this.imageworkSpaceName}_{i++}.png";
                 var filepath = Path.Combine(inputImagePath, filename);
                 trimmedimage.Save(filepath, ImageFormat.Png);
+                trimmedimage.Dispose();
                 Debug.WriteLine("generate input Image : " + filepath);
             }
         }

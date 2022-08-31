@@ -186,6 +186,7 @@ namespace BoulderingSegmentImageGenerator
             this.inputImages.Next();
             this.segmentImages.Next();
 
+
             LoadCurrentImage();
             this.strokes = new Stack<List<Point>>();
         }
