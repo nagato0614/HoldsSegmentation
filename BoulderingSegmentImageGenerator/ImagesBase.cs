@@ -18,7 +18,7 @@ namespace BoulderingSegmentImageGenerator
         {
             this.pathToWorkspace = pathToWorkspace;
             this.imageworkSpaceName = imageworkSpaceName;
-            init();
+            Init();
         }
 
         ~ImagesBase()
@@ -26,12 +26,13 @@ namespace BoulderingSegmentImageGenerator
             this.currentImage.Dispose();
         }
 
-        private void init()
+        private void Init()
         {
             GetNumOfImages();
             GenerateImageWorkspace();
             ProcessImages();
             this.currentImageID = 0;
+            OpenCurrentImage();
         }
 
         private void GetNumOfImages()
@@ -57,7 +58,8 @@ namespace BoulderingSegmentImageGenerator
             this.NextImageId();
             var filepath = GetCurrentImageFilePath();
             Debug.WriteLine("Next Image : " + filepath);
-            this.currentImage = new Bitmap(filepath);
+            this.currentImage.Dispose();
+            this.OpenCurrentImage();
         }
 
         public void Prev()
@@ -65,7 +67,8 @@ namespace BoulderingSegmentImageGenerator
             this.PrevImageId();
             var filepath = GetCurrentImageFilePath();
             Debug.WriteLine("Prev Image : " + filepath);
-            this.currentImage = new Bitmap(filepath);
+            this.currentImage.Dispose();
+            this.OpenCurrentImage();
         }
 
         // 
@@ -101,47 +104,31 @@ namespace BoulderingSegmentImageGenerator
         }
 
         // 現在処理している画像のbitmapを取得
-        public Bitmap GetCurrentImage()
+        public void OpenCurrentImage()
         {
             var filepath = GetCurrentImageFilePath();
             Bitmap img = new Bitmap(filepath);
-            this.currentImage = img;
+
+            this.currentImage = new Bitmap(img.Width, img.Height);
+            using (var g = Graphics.FromImage(this.currentImage))
+            {
+                g.DrawImage(img, 0, 0, img.Width, img.Height);
+            }
+            img.Dispose();
 
             Debug.WriteLine("load current Image : " + filepath);
-            return img;
+        }
+
+        public Bitmap GetCurrentImage()
+        {
+            return this.currentImage;
         }
 
         // 処理した画像を受け取り保存する
         public void SaveCurrentImage()
         {
-            // 一時ファイルに画像を保存
-            var tmpfilepath = Path.Combine(this.pathToWorkspace, "tmp.png");
-            try
-            {
-                this.currentImage.Save(tmpfilepath, ImageFormat.Png);
-                this.currentImage.Dispose();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error occured : " + e.ToString());
-
-            }
-
-
-            // もとのファイルに画像を保存
-            try
-            {
-                var filepath = this.GetCurrentImageFilePath();
-                var bitmap = new Bitmap(tmpfilepath);
-                Debug.WriteLine("Save Current Image : " + tmpfilepath);
-                bitmap.Save(filepath, ImageFormat.Png);
-                bitmap.Dispose();
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error occured : " + e.ToString());
-            }
-
+            var filepath = this.GetCurrentImageFilePath();
+            this.currentImage.Save(filepath);
         }
 
 
