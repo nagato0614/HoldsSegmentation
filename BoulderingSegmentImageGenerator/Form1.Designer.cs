@@ -317,7 +317,6 @@
             this.Name = "BoulderingSegmentImageGenerator";
             this.Text = "BoulderingSegmentImageGenerator";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.InputImage)).EndInit();
             this.HoldsType.ResumeLayout(false);
             this.HoldsType.PerformLayout();
