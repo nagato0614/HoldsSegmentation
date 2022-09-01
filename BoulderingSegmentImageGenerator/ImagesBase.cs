@@ -62,6 +62,7 @@ namespace BoulderingSegmentImageGenerator
             this.OpenCurrentImage();
         }
 
+        // currentImageを前の画像に変更する
         public void Prev()
         {
             this.PrevImageId();
@@ -71,7 +72,7 @@ namespace BoulderingSegmentImageGenerator
             this.OpenCurrentImage();
         }
 
-        // 
+        // 次のIDを取得する
         private void NextImageId()
         {
             this.currentImageID++;
@@ -81,6 +82,7 @@ namespace BoulderingSegmentImageGenerator
             }
         }
 
+        // 前のIDを取得する
         private void PrevImageId()
         {
             this.currentImageID--;
@@ -88,11 +90,6 @@ namespace BoulderingSegmentImageGenerator
             {
                 this.currentImageID = this.numOfImage - 1;
             }
-        }
-
-        private int GetCurrentImageID()
-        {
-            return this.currentImageID;
         }
 
         // 現在処理してい画像の絶対ファイルパス
@@ -119,6 +116,7 @@ namespace BoulderingSegmentImageGenerator
             Debug.WriteLine("load current Image : " + filepath);
         }
 
+        // 現在オープンしている画像を取得する
         public Bitmap GetCurrentImage()
         {
             return this.currentImage;
@@ -131,16 +129,22 @@ namespace BoulderingSegmentImageGenerator
             this.currentImage.Save(filepath);
         }
 
-
-
         // 入力画像の処理を記述する
         public abstract void ProcessImages();
 
+        // 現在オープンしている画像
         protected Bitmap currentImage;
+
+        // load 下画像の枚数
         private int numOfImage;
+
+        // 現在処理している画像の番号 (ID)
         protected int currentImageID;
 
+        // ワークスペースへのパス
         protected readonly string pathToWorkspace;
+
+        // 処理している画像郡のファイル名
         protected readonly string imageworkSpaceName;
     }
 }

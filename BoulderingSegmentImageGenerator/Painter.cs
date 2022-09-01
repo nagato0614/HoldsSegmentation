@@ -260,6 +260,8 @@ namespace BoulderingSegmentImageGenerator
             // 左クリック出ない場合は処理を行わない
             if (Control.MouseButtons != MouseButtons.Left)
                 return;
+            if (this.strokes == null)
+                return;
             this.strokes.Peek().Add(drawPoint);
             this.UpdateImage();
         }

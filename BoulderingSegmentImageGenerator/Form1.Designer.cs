@@ -60,8 +60,8 @@
             // 
             // InputImage
             // 
-            this.InputImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.InputImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InputImage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.InputImage.Cursor = System.Windows.Forms.Cursors.Default;
@@ -71,7 +71,6 @@
             this.InputImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.InputImage.TabIndex = 0;
             this.InputImage.TabStop = false;
-            this.InputImage.Click += new System.EventHandler(this.InputImage_Click);
             this.InputImage.Paint += new System.Windows.Forms.PaintEventHandler(this.InputImage_Paint);
             this.InputImage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.InputImage_MouseDown);
             this.InputImage.MouseMove += new System.Windows.Forms.MouseEventHandler(this.InputImage_MouseMove);
@@ -150,10 +149,6 @@
             this.open.UseVisualStyleBackColor = true;
             this.open.Click += new System.EventHandler(this.open_Click);
             // 
-            // folderBrowserDialog
-            // 
-            this.folderBrowserDialog.HelpRequest += new System.EventHandler(this.folderBrowserDialog_HelpRequest);
-            // 
             // PaintSizeBox
             // 
             this.PaintSizeBox.Controls.Add(this.paintSizeBar);
@@ -177,7 +172,7 @@
             // 
             // InputImageListBox
             // 
-            this.InputImageListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.InputImageListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InputImageListBox.FormattingEnabled = true;
             this.InputImageListBox.ItemHeight = 18;
@@ -185,7 +180,6 @@
             this.InputImageListBox.Name = "InputImageListBox";
             this.InputImageListBox.Size = new System.Drawing.Size(222, 1246);
             this.InputImageListBox.TabIndex = 12;
-            this.InputImageListBox.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // LoadButton
             // 
@@ -206,7 +200,6 @@
             this.AlphaBar.Size = new System.Drawing.Size(183, 69);
             this.AlphaBar.TabIndex = 17;
             this.AlphaBar.Value = 50;
-            this.AlphaBar.Scroll += new System.EventHandler(this.AlphaBar_Scroll);
             this.AlphaBar.ValueChanged += new System.EventHandler(this.AlphaBar_ValueChanged);
             // 
             // InputImageGroup
@@ -324,7 +317,6 @@
             this.Name = "BoulderingSegmentImageGenerator";
             this.Text = "BoulderingSegmentImageGenerator";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.InputImage)).EndInit();
             this.HoldsType.ResumeLayout(false);
             this.HoldsType.PerformLayout();
