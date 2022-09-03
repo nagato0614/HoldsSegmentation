@@ -6,6 +6,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows;
+using System.Net.Sockets;
 
 namespace BoulderingSegmentImageGenerator
 {
@@ -214,6 +216,13 @@ namespace BoulderingSegmentImageGenerator
             this.strokes = new Stack<List<Point>>();
         }
 
+        // 画像の位置と拡大率をリセットする
+        public void ResetImage()
+        {
+            matrix.Reset();
+            UpdateImage();
+        }
+
         // pictureboxが右クリックされた時 (画像を移動させる)
         public void MouseDownRight(Point p)
         {
@@ -228,8 +237,8 @@ namespace BoulderingSegmentImageGenerator
         // pictureboxが押されたときの処理
         public void MouseDownLeft(Point p)
         {
-
-            Point drawPoint = p;
+            // 描画位置を変換行列をもとにずらす
+            var drawPoint = TransformPoint(p);
             int width = (int)pen.Width;
 
             // 押された場所に色を付ける
@@ -247,6 +256,25 @@ namespace BoulderingSegmentImageGenerator
             Debug.WriteLine("マウス座標 : " + System.Windows.Forms.Cursor.Position.ToString());
             Debug.WriteLine("Cliked Point : " + drawPoint.ToString());
         }
+
+        // pictureBoxの座標から元画像の座標を得る
+        private Point TransformPoint(Point p)
+        {
+            // 逆行列っを求める
+            var invet = matrix.Clone();
+            invet.Invert();
+
+            var points = new PointF[]
+            {
+                new PointF(p.X, p.Y),
+            };
+
+            // ピクチャボックス座標を画像座標に変換する.
+            invet.TransformPoints(points);
+
+            return Point.Round(points[0]);
+        }
+
 
         // pictureboxからマウスが話されたとき
         public void MouseUpLeft()
@@ -266,7 +294,7 @@ namespace BoulderingSegmentImageGenerator
         // pictureBoxでマウスを押下したあと動かした場合の処理
         public void MouseMoveLeft(Point p)
         {
-            Point drawPoint = p;
+            var drawPoint = TransformPoint(p);
 
             // 左クリック出ない場合は処理を行わない
             if (Control.MouseButtons != MouseButtons.Left)
