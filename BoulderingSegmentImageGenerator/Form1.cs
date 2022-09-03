@@ -285,6 +285,8 @@ namespace BoulderingSegmentImageGenerator
 
         private void ResetButton_Click(object sender, EventArgs e)
         {
+            if (painter == null)
+                return;
 
         }
     }

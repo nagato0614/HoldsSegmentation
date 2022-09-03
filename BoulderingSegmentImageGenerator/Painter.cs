@@ -116,15 +116,22 @@ namespace BoulderingSegmentImageGenerator
             using (Graphics gUpdatedImage = Graphics.FromImage(updatedImage))
             {
                 gUpdatedImage.CompositingMode = CompositingMode.SourceOver;
+
+                // 変換行列を読み込み
                 gUpdatedImage.Transform = matrix;
+
+                // 画像を拡大時に補完を行わないようにする
+                // ピクセルがそのまま拡大されることによりセグメンテーション画像を作りやすくする
+                gUpdatedImage.InterpolationMode = InterpolationMode.NearestNeighbor;
+                gUpdatedImage.PixelOffsetMode = PixelOffsetMode.Half;
+
+                // アフィン変換した画像を描く
                 gUpdatedImage.DrawImage(segImg, 0, 0, segImg.Width, segImg.Height);
                 gUpdatedImage.DrawImage(inImg, 0, 0, inImg.Width, inImg.Height);
-
-                //g.CompositingMode = CompositingMode.SourceOver;
-                //g.Transform = matrix;
-                //g.DrawImage(segImg, 0, 0, segImg.Width, segImg.Height);
             }
 
+            segImg.Dispose();
+            inImg.Dispose();
             this.processedImage = updatedImage;
         }
 
@@ -211,7 +218,6 @@ namespace BoulderingSegmentImageGenerator
         public void MouseDownRight(Point p)
         {
             Debug.WriteLine("Right Button is down");
-            matrix.Reset();
             UpdateImage();
 
             oldPoint.X = p.X;
