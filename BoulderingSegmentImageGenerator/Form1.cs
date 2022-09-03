@@ -74,10 +74,10 @@ namespace BoulderingSegmentImageGenerator
         // PictureBox内でマウスホイールを動かした時, ズームorズームアウトする
         private void InputImage_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (painter != null)
-            {
-                painter.ZoomPicture(ConvertCoordinates(e.Location), e.Delta);
-            }
+            if (painter == null)
+                return;
+            painter.ZoomPicture(ConvertCoordinates(e.Location), e.Delta);
+            this.UpdatePictureBox();
         }
 
         // PictureBox をクリックされたときの処理
@@ -226,6 +226,14 @@ namespace BoulderingSegmentImageGenerator
             this.painter.UpdateImage();
         }
 
+        // ResetButtonの処理
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            if (painter == null)
+                return;
+            painter.ResetImage();
+        }
+
         // すべてのボタンを有効化する
         private void EnableButton()
         {
@@ -234,6 +242,9 @@ namespace BoulderingSegmentImageGenerator
             LeftRotateButton.Enabled = true;
             RightRotateButton.Enabled = true;
             SaveButton.Enabled = true;
+            ResetButton.Enabled = true;
+            LoadButton.Enabled = true;
+            open.Enabled = true;
         }
 
         // すべてのボタンを無効化する
@@ -244,6 +255,9 @@ namespace BoulderingSegmentImageGenerator
             LeftRotateButton.Enabled = false;
             RightRotateButton.Enabled = false;
             SaveButton.Enabled = false;
+            ResetButton.Enabled = false;
+            LoadButton.Enabled = false;
+            open.Enabled = false;
         }
 
         // picturebox の座標を表示している画像の座標系に変換する
@@ -283,9 +297,6 @@ namespace BoulderingSegmentImageGenerator
             return new Point(X0, Y0);
         }
 
-        private void ResetButton_Click(object sender, EventArgs e)
-        {
 
-        }
     }
 }
