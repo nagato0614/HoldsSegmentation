@@ -74,10 +74,10 @@ namespace BoulderingSegmentImageGenerator
         // PictureBox内でマウスホイールを動かした時, ズームorズームアウトする
         private void InputImage_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (painter != null)
-            {
-                painter.ZoomPicture(ConvertCoordinates(e.Location), e.Delta);
-            }
+            if (painter == null)
+                return;
+            painter.ZoomPicture(ConvertCoordinates(e.Location), e.Delta);
+            this.UpdatePictureBox();
         }
 
         // PictureBox をクリックされたときの処理

@@ -110,17 +110,22 @@ namespace BoulderingSegmentImageGenerator
             var segImg = SetBitmapAlpha(this.currentSegmentImage, this.SegmentAlpha);
             var inImg = SetBitmapAlpha(this.currentInputImage, this.InputAlpha);
 
-
+            Bitmap updatedImage = new Bitmap(segImg.Width, segImg.Height);
             // 入力画像とセグメント画像を合成.
             // 更に画像を拡大縮小 & 移動
-            using (var g = Graphics.FromImage(inImg))
+            using (Graphics gUpdatedImage = Graphics.FromImage(updatedImage))
             {
-                g.CompositingMode = CompositingMode.SourceOver;
-                g.DrawImage(segImg, 0, 0, segImg.Width, segImg.Height);
-                g.Transform = matrix;
+                gUpdatedImage.CompositingMode = CompositingMode.SourceOver;
+                gUpdatedImage.Transform = matrix;
+                gUpdatedImage.DrawImage(segImg, 0, 0, segImg.Width, segImg.Height);
+                gUpdatedImage.DrawImage(inImg, 0, 0, inImg.Width, inImg.Height);
+
+                //g.CompositingMode = CompositingMode.SourceOver;
+                //g.Transform = matrix;
+                //g.DrawImage(segImg, 0, 0, segImg.Width, segImg.Height);
             }
 
-            this.processedImage = inImg;
+            this.processedImage = updatedImage;
         }
 
 
