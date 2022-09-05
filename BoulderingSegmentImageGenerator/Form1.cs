@@ -151,6 +151,17 @@ namespace BoulderingSegmentImageGenerator
             if (this.painter == null)
                 this.painter = new Painter(FolderPath.Text, InputImage.Location);
             InputImage.Image = painter.GetProcessedImage();
+
+
+            // ListBox にワークスペース一覧を追加する
+            var folderList = painter.GetFolderList();
+            InputImageListBox.BeginUpdate();
+            foreach (var folder in folderList)
+            {
+                InputImageListBox.Items.Add(folder);
+            }
+            InputImageListBox.EndUpdate();
+
             EnableButton();
         }
 
@@ -244,7 +255,7 @@ namespace BoulderingSegmentImageGenerator
             SaveButton.Enabled = true;
             ResetButton.Enabled = true;
             LoadButton.Enabled = true;
-            open.Enabled = true;
+            openButton.Enabled = true;
         }
 
         // すべてのボタンを無効化する
@@ -257,7 +268,7 @@ namespace BoulderingSegmentImageGenerator
             SaveButton.Enabled = false;
             ResetButton.Enabled = false;
             LoadButton.Enabled = false;
-            open.Enabled = false;
+            openButton.Enabled = false;
         }
 
         // picturebox の座標を表示している画像の座標系に変換する
@@ -289,14 +300,15 @@ namespace BoulderingSegmentImageGenerator
                 Y0 = (int)((y - dy) * imgW / picW);
             }
 
-            if (X0 < 0 || imgW < X0 || Y0 < 0 || imgH < Y0)
-            {
-                return new Point(-1, -1); // 範囲外をどう表すのがいいか
-            }
-
             return new Point(X0, Y0);
         }
 
+        private void InputImageListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (painter == null)
+                return;
 
+
+        }
     }
 }

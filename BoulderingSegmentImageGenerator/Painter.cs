@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 
 namespace BoulderingSegmentImageGenerator
 {
@@ -351,6 +352,7 @@ namespace BoulderingSegmentImageGenerator
             pen.Color = c;
         }
 
+        // マウスホイール時に画像を拡大縮小する
         public void ZoomPicture(Point p, int zoom)
         {
             // ポインタで指定した位置を原点に移動
@@ -382,6 +384,26 @@ namespace BoulderingSegmentImageGenerator
         public void SetPenSize(int s)
         {
             this.pen.Width = s;
+        }
+
+        // 今まで作成していたセグメント画像のworkspace一覧を取得
+        public List<string> GetFolderList()
+        {
+            List<string> list = new List<string>();
+            var folders = Directory.GetDirectories(this.originalImageFolderPath);
+            var pattern = $"^{Params.WorkSpaceFolderName}_[0-9]*";
+            Debug.WriteLine("regrex pattern : " + pattern);
+            foreach (string folder in folders)
+            {
+                string folderName = Path.GetFileName(folder);
+                Debug.WriteLine("exist folder : " + folderName);
+                if (Regex.IsMatch(folderName, pattern))
+                {
+                    list.Add(folderName);
+                }
+            }
+
+            return list;
         }
 
         // 線を描くためにマウスの軌跡を保存する
