@@ -13,7 +13,7 @@ using System;
 
 namespace BoulderingSegmentImageGenerator
 {
-    public class Painter
+    public partial class Painter
     {
 
         public Painter(string InputImageFolderPath, Point PictureBoxLocation)
@@ -25,6 +25,7 @@ namespace BoulderingSegmentImageGenerator
 
         ~Painter()
         {
+            this.processedImage.Dispose();
         }
 
 
@@ -45,6 +46,12 @@ namespace BoulderingSegmentImageGenerator
                 OpenWorkspace(list.First());
             }
 
+            LoadImages();
+        }
+
+        // 作成した or 選択したフォルダを開く (画像を読み込む)
+        public void LoadImages()
+        {
             // 入出力画像を扱うためのインスタンスを初期化
             this.segmentImages = new SegmentImages(this.workspaceFolderPath, Params.SegmentImageFolderName);
             this.inputImages = new InputImages(this.workspaceFolderPath, Params.InputImageFolderName);
@@ -57,6 +64,7 @@ namespace BoulderingSegmentImageGenerator
             UpdateImage();
         }
 
+        // 既存のワークスペースを開く
         public void OpenWorkspace(string workspaceName)
         {
             var workspacePath = Path.Combine(originalImageFolderPath, workspaceName);
@@ -95,7 +103,7 @@ namespace BoulderingSegmentImageGenerator
 
         // ワークスペースフォルダの作成
         // 現在時刻を所得してフォルダ名にする
-        private void CreateWorkSpace()
+        public void CreateWorkSpace()
         {
             // 現在時刻の取得
             DateTime dt = DateTime.Now;
@@ -432,44 +440,5 @@ namespace BoulderingSegmentImageGenerator
 
             return list;
         }
-
-        // 線を描くためにマウスの軌跡を保存する
-        private Stack<List<Point>> strokes = new Stack<List<Point>>();
-
-        // 線を描くためのペン
-        private Pen pen;
-
-        // セグメント画像のアルファ値
-        private float SegmentAlpha;
-
-        // 入力画像のアルファ値
-        private float InputAlpha;
-
-        // 現在処理しているセグメント画像フォルダ
-        private SegmentImages segmentImages;
-
-        // 現在処理している入力画像フォルダ
-        private InputImages inputImages;
-
-        // 現在処理している画像
-        private Bitmap currentInputImage;
-        private Bitmap currentSegmentImage;
-
-        // 現在 picture box に表示している画像
-        private Bitmap processedImage;
-
-        // 処理を行いたい画像が保存されているフォルダ
-        private string originalImageFolderPath;
-
-        // 新しく生成した画像が入っているフォルダ
-        private string workspaceFolderPath;
-
-        // 現在選択しているホールドのタイプ
-        private HoldsType_t holdsType;
-
-        // 拡大縮小の変換行列
-        private Matrix matrix = new Matrix();
-        private PointF oldPoint = PointF.Empty;
-        private bool rightButtonDown = false;
     }
 }
