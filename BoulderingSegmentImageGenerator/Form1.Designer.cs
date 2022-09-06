@@ -49,6 +49,9 @@
             this.NextButton = new System.Windows.Forms.Button();
             this.PrevButton = new System.Windows.Forms.Button();
             this.ResetButton = new System.Windows.Forms.Button();
+            this.NewButton = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.NewWorkspaceLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.InputImage)).BeginInit();
             this.HoldsType.SuspendLayout();
             this.PaintSizeBox.SuspendLayout();
@@ -141,9 +144,10 @@
             // openButton
             // 
             this.openButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.openButton.Location = new System.Drawing.Point(402, 26);
+            this.openButton.Font = new System.Drawing.Font("Myrica M", 11F);
+            this.openButton.Location = new System.Drawing.Point(380, 21);
             this.openButton.Name = "openButton";
-            this.openButton.Size = new System.Drawing.Size(75, 25);
+            this.openButton.Size = new System.Drawing.Size(132, 33);
             this.openButton.TabIndex = 8;
             this.openButton.Text = "open";
             this.openButton.UseVisualStyleBackColor = true;
@@ -186,9 +190,10 @@
             // LoadButton
             // 
             this.LoadButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.LoadButton.Location = new System.Drawing.Point(498, 26);
+            this.LoadButton.Font = new System.Drawing.Font("Myrica M", 11F);
+            this.LoadButton.Location = new System.Drawing.Point(518, 21);
             this.LoadButton.Name = "LoadButton";
-            this.LoadButton.Size = new System.Drawing.Size(75, 25);
+            this.LoadButton.Size = new System.Drawing.Size(132, 33);
             this.LoadButton.TabIndex = 15;
             this.LoadButton.Text = "Load";
             this.LoadButton.UseVisualStyleBackColor = true;
@@ -293,12 +298,43 @@
             this.ResetButton.UseVisualStyleBackColor = true;
             this.ResetButton.Click += new System.EventHandler(this.ResetButton_Click);
             // 
+            // NewButton
+            // 
+            this.NewButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.NewButton.Font = new System.Drawing.Font("Myrica M", 11F);
+            this.NewButton.Location = new System.Drawing.Point(1368, 21);
+            this.NewButton.Name = "NewButton";
+            this.NewButton.Size = new System.Drawing.Size(132, 33);
+            this.NewButton.TabIndex = 25;
+            this.NewButton.Text = "New";
+            this.NewButton.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(1006, 26);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(356, 25);
+            this.textBox1.TabIndex = 26;
+            // 
+            // NewWorkspaceLabel
+            // 
+            this.NewWorkspaceLabel.AutoSize = true;
+            this.NewWorkspaceLabel.Font = new System.Drawing.Font("Myrica M", 11F);
+            this.NewWorkspaceLabel.Location = new System.Drawing.Point(792, 26);
+            this.NewWorkspaceLabel.Name = "NewWorkspaceLabel";
+            this.NewWorkspaceLabel.Size = new System.Drawing.Size(208, 22);
+            this.NewWorkspaceLabel.TabIndex = 27;
+            this.NewWorkspaceLabel.Text = "New Workspace Name";
+            // 
             // BoulderingSegmentImageGenerator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1958, 1344);
+            this.Controls.Add(this.NewWorkspaceLabel);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.NewButton);
             this.Controls.Add(this.ResetButton);
             this.Controls.Add(this.PrevButton);
             this.Controls.Add(this.NextButton);
@@ -357,6 +393,9 @@
         private System.Windows.Forms.Button PrevButton;
         private System.Windows.Forms.TrackBar paintSizeBar;
         private System.Windows.Forms.Button ResetButton;
+        private System.Windows.Forms.Button NewButton;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label NewWorkspaceLabel;
     }
 }
 
