@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Windows;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
+using System;
 
 namespace BoulderingSegmentImageGenerator
 {
@@ -28,9 +29,21 @@ namespace BoulderingSegmentImageGenerator
 
 
         // 初期化
+        // 既存のワークスペースがある場合は一番上にあるものを開き
+        // ない場合は新しいワークスペースを作る
         private void Init()
         {
-            CreateWorkSpace();
+            var list = GetFolderList();
+
+            // 既存のワークスペースがない場合の処理
+            if (list.Count == 0)
+            {
+                CreateWorkSpace();
+            }
+            else
+            {
+                OpenWorkspace(list.First());
+            }
 
             // 入出力画像を扱うためのインスタンスを初期化
             this.segmentImages = new SegmentImages(this.workspaceFolderPath, Params.SegmentImageFolderName);
@@ -43,6 +56,14 @@ namespace BoulderingSegmentImageGenerator
             SetAlpha(50);
             UpdateImage();
         }
+
+        public void OpenWorkspace(string workspaceName)
+        {
+            var workspacePath = Path.Combine(originalImageFolderPath, workspaceName);
+            this.workspaceFolderPath = workspacePath;
+            Debug.WriteLine("open workspace : " + this.workspaceFolderPath);
+        }
+
 
         // input, sengment 画像をファイルから読み込み
         public void LoadCurrentImage()
@@ -73,10 +94,16 @@ namespace BoulderingSegmentImageGenerator
         }
 
         // ワークスペースフォルダの作成
+        // 現在時刻を所得してフォルダ名にする
         private void CreateWorkSpace()
         {
+            // 現在時刻の取得
+            DateTime dt = DateTime.Now;
+            String name = dt.ToString($"{dt:yyyyMMddHHmmss}");
+
             // ワークスペース作成.　同名フォルダがある場合連番を振る.
-            var workspacePath = Path.Combine(originalImageFolderPath, Params.WorkSpaceFolderName);
+            var workspaceFolderName = Params.WorkSpaceFolderName + "_" + name;
+            var workspacePath = Path.Combine(originalImageFolderPath, workspaceFolderName);
             int i = 1;
             var newPath = workspacePath;
             while (Directory.Exists(newPath))

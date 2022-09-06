@@ -310,5 +310,11 @@ namespace BoulderingSegmentImageGenerator
 
 
         }
+
+        // 新しいワークスペースを作成する
+        private void NewButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
