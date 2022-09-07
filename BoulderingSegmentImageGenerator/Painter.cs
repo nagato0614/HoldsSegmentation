@@ -8,10 +8,12 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
+using System;
 
 namespace BoulderingSegmentImageGenerator
 {
-    public class Painter
+    public partial class Painter
     {
 
         public Painter(string InputImageFolderPath, Point PictureBoxLocation)
@@ -23,14 +25,33 @@ namespace BoulderingSegmentImageGenerator
 
         ~Painter()
         {
+            this.processedImage.Dispose();
         }
 
 
         // 初期化
+        // 既存のワークスペースがある場合は一番上にあるものを開き
+        // ない場合は新しいワークスペースを作る
         private void Init()
         {
-            CreateWorkSpace();
+            var list = GetFolderList();
 
+            // 既存のワークスペースがない場合の処理
+            if (list.Count == 0)
+            {
+                CreateWorkSpace();
+            }
+            else
+            {
+                OpenWorkspace(list.First());
+            }
+
+            LoadImages();
+        }
+
+        // 作成した or 選択したフォルダを開く (画像を読み込む)
+        public void LoadImages()
+        {
             // 入出力画像を扱うためのインスタンスを初期化
             this.segmentImages = new SegmentImages(this.workspaceFolderPath, Params.SegmentImageFolderName);
             this.inputImages = new InputImages(this.workspaceFolderPath, Params.InputImageFolderName);
@@ -42,6 +63,15 @@ namespace BoulderingSegmentImageGenerator
             SetAlpha(50);
             UpdateImage();
         }
+
+        // 既存のワークスペースを開く
+        public void OpenWorkspace(string workspaceName)
+        {
+            var workspacePath = Path.Combine(originalImageFolderPath, workspaceName);
+            this.workspaceFolderPath = workspacePath;
+            Debug.WriteLine("open workspace : " + this.workspaceFolderPath);
+        }
+
 
         // input, sengment 画像をファイルから読み込み
         public void LoadCurrentImage()
@@ -72,10 +102,16 @@ namespace BoulderingSegmentImageGenerator
         }
 
         // ワークスペースフォルダの作成
-        private void CreateWorkSpace()
+        // 現在時刻を所得してフォルダ名にする
+        public void CreateWorkSpace()
         {
+            // 現在時刻の取得
+            DateTime dt = DateTime.Now;
+            String name = dt.ToString($"{dt:yyyyMMddHHmmss}");
+
             // ワークスペース作成.　同名フォルダがある場合連番を振る.
-            var workspacePath = Path.Combine(originalImageFolderPath, Params.WorkSpaceFolderName);
+            var workspaceFolderName = Params.WorkSpaceFolderName + "_" + name;
+            var workspacePath = Path.Combine(originalImageFolderPath, workspaceFolderName);
             int i = 1;
             var newPath = workspacePath;
             while (Directory.Exists(newPath))
@@ -351,6 +387,7 @@ namespace BoulderingSegmentImageGenerator
             pen.Color = c;
         }
 
+        // マウスホイール時に画像を拡大縮小する
         public void ZoomPicture(Point p, int zoom)
         {
             // ポインタで指定した位置を原点に移動
@@ -384,43 +421,24 @@ namespace BoulderingSegmentImageGenerator
             this.pen.Width = s;
         }
 
-        // 線を描くためにマウスの軌跡を保存する
-        private Stack<List<Point>> strokes = new Stack<List<Point>>();
+        // 今まで作成していたセグメント画像のworkspace一覧を取得
+        public List<string> GetFolderList()
+        {
+            List<string> list = new List<string>();
+            var folders = Directory.GetDirectories(this.originalImageFolderPath);
+            var pattern = $"^{Params.WorkSpaceFolderName}_[0-9]*";
+            Debug.WriteLine("regrex pattern : " + pattern);
+            foreach (string folder in folders)
+            {
+                string folderName = Path.GetFileName(folder);
+                Debug.WriteLine("exist folder : " + folderName);
+                if (Regex.IsMatch(folderName, pattern))
+                {
+                    list.Add(folderName);
+                }
+            }
 
-        // 線を描くためのペン
-        private Pen pen;
-
-        // セグメント画像のアルファ値
-        private float SegmentAlpha;
-
-        // 入力画像のアルファ値
-        private float InputAlpha;
-
-        // 現在処理しているセグメント画像フォルダ
-        private SegmentImages segmentImages;
-
-        // 現在処理している入力画像フォルダ
-        private InputImages inputImages;
-
-        // 現在処理している画像
-        private Bitmap currentInputImage;
-        private Bitmap currentSegmentImage;
-
-        // 現在 picture box に表示している画像
-        private Bitmap processedImage;
-
-        // 処理を行いたい画像が保存されているフォルダ
-        private string originalImageFolderPath;
-
-        // 新しく生成した画像が入っているフォルダ
-        private string workspaceFolderPath;
-
-        // 現在選択しているホールドのタイプ
-        private HoldsType_t holdsType;
-
-        // 拡大縮小の変換行列
-        private Matrix matrix = new Matrix();
-        private PointF oldPoint = PointF.Empty;
-        private bool rightButtonDown = false;
+            return list;
+        }
     }
 }

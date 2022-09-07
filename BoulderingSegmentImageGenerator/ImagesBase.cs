@@ -26,7 +26,32 @@ namespace BoulderingSegmentImageGenerator
             this.currentImage.Dispose();
         }
 
+        // 初期化処理
+        // すでに作業フォルダがあればそれを開く
         private void Init()
+        {
+            // すでにフォルダが存在する場合はそれを開く
+            var imageWorkspace = Path.Combine(pathToWorkspace, imageworkSpaceName);
+            if (Directory.Exists(imageWorkspace))
+            {
+                OpenImageWorkspace();
+            }
+            else
+            {
+                CreateNewImageWorkspace();
+            }
+        }
+
+        // 既存のワークスペースを開く
+        private void OpenImageWorkspace()
+        {
+            GetNumOfImages();
+            this.currentImageID = 0;
+            OpenCurrentImage();
+        }
+
+        // 新しいワークスペースを作成する
+        private void CreateNewImageWorkspace()
         {
             GetNumOfImages();
             GenerateImageWorkspace();

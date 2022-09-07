@@ -12,7 +12,8 @@ namespace BoulderingSegmentImageGenerator
 {
     class SegmentImages : ImagesBase
     {
-        public SegmentImages(string pathToWorkspace, string imageworkSpaceName) : base(pathToWorkspace, imageworkSpaceName)
+        public SegmentImages(string pathToWorkspace, string imageworkSpaceName)
+            : base(pathToWorkspace, imageworkSpaceName)
         {
         }
 

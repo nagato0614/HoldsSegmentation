@@ -34,7 +34,7 @@
             this.HoldsType = new System.Windows.Forms.GroupBox();
             this.BackgrounButton = new System.Windows.Forms.RadioButton();
             this.FolderPath = new System.Windows.Forms.TextBox();
-            this.open = new System.Windows.Forms.Button();
+            this.openButton = new System.Windows.Forms.Button();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.PaintSizeBox = new System.Windows.Forms.GroupBox();
             this.paintSizeBar = new System.Windows.Forms.TrackBar();
@@ -49,6 +49,7 @@
             this.NextButton = new System.Windows.Forms.Button();
             this.PrevButton = new System.Windows.Forms.Button();
             this.ResetButton = new System.Windows.Forms.Button();
+            this.NewButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.InputImage)).BeginInit();
             this.HoldsType.SuspendLayout();
             this.PaintSizeBox.SuspendLayout();
@@ -67,7 +68,7 @@
             this.InputImage.Cursor = System.Windows.Forms.Cursors.Default;
             this.InputImage.Location = new System.Drawing.Point(227, 69);
             this.InputImage.Name = "InputImage";
-            this.InputImage.Size = new System.Drawing.Size(1449, 1248);
+            this.InputImage.Size = new System.Drawing.Size(1272, 1248);
             this.InputImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.InputImage.TabIndex = 0;
             this.InputImage.TabStop = false;
@@ -138,16 +139,17 @@
             this.FolderPath.TabIndex = 7;
             this.FolderPath.TextChanged += new System.EventHandler(this.FolderPath_TextChanged);
             // 
-            // open
+            // openButton
             // 
-            this.open.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.open.Location = new System.Drawing.Point(402, 26);
-            this.open.Name = "open";
-            this.open.Size = new System.Drawing.Size(75, 25);
-            this.open.TabIndex = 8;
-            this.open.Text = "open";
-            this.open.UseVisualStyleBackColor = true;
-            this.open.Click += new System.EventHandler(this.open_Click);
+            this.openButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.openButton.Font = new System.Drawing.Font("Myrica M", 11F);
+            this.openButton.Location = new System.Drawing.Point(380, 21);
+            this.openButton.Name = "openButton";
+            this.openButton.Size = new System.Drawing.Size(132, 33);
+            this.openButton.TabIndex = 8;
+            this.openButton.Text = "open";
+            this.openButton.UseVisualStyleBackColor = true;
+            this.openButton.Click += new System.EventHandler(this.open_Click);
             // 
             // PaintSizeBox
             // 
@@ -174,19 +176,22 @@
             // 
             this.InputImageListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.InputImageListBox.Font = new System.Drawing.Font("Myrica M", 12F);
             this.InputImageListBox.FormattingEnabled = true;
-            this.InputImageListBox.ItemHeight = 18;
-            this.InputImageListBox.Location = new System.Drawing.Point(1706, 69);
+            this.InputImageListBox.ItemHeight = 24;
+            this.InputImageListBox.Location = new System.Drawing.Point(1524, 69);
             this.InputImageListBox.Name = "InputImageListBox";
-            this.InputImageListBox.Size = new System.Drawing.Size(222, 1246);
+            this.InputImageListBox.Size = new System.Drawing.Size(404, 1228);
             this.InputImageListBox.TabIndex = 12;
+            this.InputImageListBox.SelectedIndexChanged += new System.EventHandler(this.InputImageListBox_SelectedIndexChanged);
             // 
             // LoadButton
             // 
             this.LoadButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.LoadButton.Location = new System.Drawing.Point(498, 26);
+            this.LoadButton.Font = new System.Drawing.Font("Myrica M", 11F);
+            this.LoadButton.Location = new System.Drawing.Point(518, 21);
             this.LoadButton.Name = "LoadButton";
-            this.LoadButton.Size = new System.Drawing.Size(75, 25);
+            this.LoadButton.Size = new System.Drawing.Size(132, 33);
             this.LoadButton.TabIndex = 15;
             this.LoadButton.Text = "Load";
             this.LoadButton.UseVisualStyleBackColor = true;
@@ -291,12 +296,25 @@
             this.ResetButton.UseVisualStyleBackColor = true;
             this.ResetButton.Click += new System.EventHandler(this.ResetButton_Click);
             // 
+            // NewButton
+            // 
+            this.NewButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.NewButton.Font = new System.Drawing.Font("Myrica M", 11F);
+            this.NewButton.Location = new System.Drawing.Point(656, 21);
+            this.NewButton.Name = "NewButton";
+            this.NewButton.Size = new System.Drawing.Size(132, 33);
+            this.NewButton.TabIndex = 25;
+            this.NewButton.Text = "New";
+            this.NewButton.UseVisualStyleBackColor = true;
+            this.NewButton.Click += new System.EventHandler(this.NewButton_Click);
+            // 
             // BoulderingSegmentImageGenerator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1958, 1344);
+            this.Controls.Add(this.NewButton);
             this.Controls.Add(this.ResetButton);
             this.Controls.Add(this.PrevButton);
             this.Controls.Add(this.NextButton);
@@ -306,7 +324,7 @@
             this.Controls.Add(this.LoadButton);
             this.Controls.Add(this.InputImageListBox);
             this.Controls.Add(this.PaintSizeBox);
-            this.Controls.Add(this.open);
+            this.Controls.Add(this.openButton);
             this.Controls.Add(this.FolderPath);
             this.Controls.Add(this.HoldsType);
             this.Controls.Add(this.InputImage);
@@ -340,7 +358,7 @@
         private System.Windows.Forms.GroupBox HoldsType;
         private System.Windows.Forms.RadioButton BackgrounButton;
         private System.Windows.Forms.TextBox FolderPath;
-        private System.Windows.Forms.Button open;
+        private System.Windows.Forms.Button openButton;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.GroupBox PaintSizeBox;
         private System.Windows.Forms.ListBox InputImageListBox;
@@ -355,6 +373,7 @@
         private System.Windows.Forms.Button PrevButton;
         private System.Windows.Forms.TrackBar paintSizeBar;
         private System.Windows.Forms.Button ResetButton;
+        private System.Windows.Forms.Button NewButton;
     }
 }
 
