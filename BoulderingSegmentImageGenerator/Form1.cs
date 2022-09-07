@@ -167,6 +167,7 @@ namespace BoulderingSegmentImageGenerator
             painter.CreateWorkSpace();
             painter.LoadImages();
             UpdateInputImageListBox();
+            InputImageListBox.Text = painter.GetCurrentFolderName();
             EnableButton();
         }
 

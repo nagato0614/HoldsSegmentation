@@ -10,6 +10,7 @@ using System.Windows;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BoulderingSegmentImageGenerator
 {
@@ -439,6 +440,12 @@ namespace BoulderingSegmentImageGenerator
             }
 
             return list;
+        }
+
+        public string GetCurrentFolderName()
+        {
+            string folderName = Path.GetFileName(this.workspaceFolderPath);
+            return folderName;
         }
     }
 }
