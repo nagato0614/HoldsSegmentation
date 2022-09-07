@@ -153,16 +153,35 @@ namespace BoulderingSegmentImageGenerator
             InputImage.Image = painter.GetProcessedImage();
 
 
+            UpdateInputImageListBox();
+            EnableButton();
+        }
+
+        // 新しいワークスペースを作成する
+        private void NewButton_Click(object sender, EventArgs e)
+        {
+            if (painter == null)
+                return;
+
+            DisableButton();
+            painter.CreateWorkSpace();
+            painter.LoadImages();
+            UpdateInputImageListBox();
+            EnableButton();
+        }
+
+        // ListBoxの内容を更新する.
+        private void UpdateInputImageListBox()
+        {
             // ListBox にワークスペース一覧を追加する
             var folderList = painter.GetFolderList();
+            InputImageListBox.Items.Clear();
             InputImageListBox.BeginUpdate();
             foreach (var folder in folderList)
             {
                 InputImageListBox.Items.Add(folder);
             }
             InputImageListBox.EndUpdate();
-
-            EnableButton();
         }
 
         private Painter painter = null;
@@ -256,6 +275,7 @@ namespace BoulderingSegmentImageGenerator
             ResetButton.Enabled = true;
             LoadButton.Enabled = true;
             openButton.Enabled = true;
+            NewButton.Enabled = true;
         }
 
         // すべてのボタンを無効化する
@@ -269,6 +289,7 @@ namespace BoulderingSegmentImageGenerator
             ResetButton.Enabled = false;
             LoadButton.Enabled = false;
             openButton.Enabled = false;
+            NewButton.Enabled = false;
         }
 
         // picturebox の座標を表示している画像の座標系に変換する
@@ -303,18 +324,28 @@ namespace BoulderingSegmentImageGenerator
             return new Point(X0, Y0);
         }
 
+        // listBoxのアイテムが選択されたらそのフォルダを開く
         private void InputImageListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (painter == null)
                 return;
 
+            DisableButton();
+            var selectedWorkspace = InputImageListBox.Text;
+            Debug.WriteLine("InputImageListBox Clicked : " + selectedWorkspace);
 
+            // 現在の開いている画像を保存する
+            painter.SaveImage();
+
+            // 選択したファイルを開き, 読み込む
+            painter.OpenWorkspace(selectedWorkspace);
+            painter.LoadImages();
+            InputImage.Image = painter.GetProcessedImage();
+            UpdateInputImageListBox();
+
+            EnableButton();
         }
 
-        // 新しいワークスペースを作成する
-        private void NewButton_Click(object sender, EventArgs e)
-        {
 
-        }
     }
 }
