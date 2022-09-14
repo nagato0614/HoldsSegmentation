@@ -20,11 +20,7 @@ namespace BoulderingSegmentImageGenerator
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        // ラジオボタンの選択, ホールド
         private void Holds_CheckedChanged(object sender, EventArgs e)
         {
             if (this.painter != null)
@@ -33,6 +29,7 @@ namespace BoulderingSegmentImageGenerator
             }
         }
 
+        // ラジオボタンの選択, ボリューム
         private void Volume_CheckedChanged(object sender, EventArgs e)
         {
             if (this.painter != null)
@@ -41,6 +38,7 @@ namespace BoulderingSegmentImageGenerator
             }
         }
 
+        // ラジオボタンの選択, 背景描画
         private void BackgrounButton_CheckedChanged(object sender, EventArgs e)
         {
             if (this.painter != null)
@@ -49,7 +47,7 @@ namespace BoulderingSegmentImageGenerator
             }
         }
 
-
+        // フォルダオープンボタンが押された時フォルダダイアログを開く
         private void open_Click(object sender, EventArgs e)
         {
             DisableButton();
@@ -66,33 +64,25 @@ namespace BoulderingSegmentImageGenerator
             EnableButton();
         }
 
+        // フォルダパスのテキスが変更されたときの処理
         private void FolderPath_TextChanged(object sender, EventArgs e)
         {
             this.folderBrowserDialog.SelectedPath = FolderPath.Text;
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void InputImage_Click(object sender, EventArgs e)
-        {
-        }
-
+        // PictureBox内でマウスホイールを動かした時, ズームorズームアウトする
         private void InputImage_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (painter != null)
-            {
-                painter.ZoomPicture(ConvertCoordinates(e.Location), e.Delta);
-            }
+            if (painter == null)
+                return;
+            painter.ZoomPicture(ConvertCoordinates(e.Location), e.Delta);
+            this.UpdatePictureBox();
         }
 
+        // PictureBox をクリックされたときの処理
+        // 左クリック : segmentを描く
+        // 左クリック : 画像を動かす
         private void InputImage_MouseDown(object sender, MouseEventArgs e)
         {
             if (painter == null)
@@ -161,21 +151,43 @@ namespace BoulderingSegmentImageGenerator
             if (this.painter == null)
                 this.painter = new Painter(FolderPath.Text, InputImage.Location);
             InputImage.Image = painter.GetProcessedImage();
+
+
+            UpdateInputImageListBox();
             EnableButton();
+        }
+
+        // 新しいワークスペースを作成する
+        private void NewButton_Click(object sender, EventArgs e)
+        {
+            if (painter == null)
+                return;
+
+            DisableButton();
+            painter.CreateWorkSpace();
+            painter.LoadImages();
+            UpdateInputImageListBox();
+            InputImageListBox.Text = painter.GetCurrentFolderName();
+            EnableButton();
+        }
+
+        // ListBoxの内容を更新する.
+        private void UpdateInputImageListBox()
+        {
+            // ListBox にワークスペース一覧を追加する
+            var folderList = painter.GetFolderList();
+            InputImageListBox.Items.Clear();
+            InputImageListBox.BeginUpdate();
+            foreach (var folder in folderList)
+            {
+                InputImageListBox.Items.Add(folder);
+            }
+            InputImageListBox.EndUpdate();
         }
 
         private Painter painter = null;
 
-        private void folderBrowserDialog_HelpRequest(object sender, EventArgs e)
-        {
-
-        }
-
-        private void AlphaBar_Scroll(object sender, EventArgs e)
-        {
-
-        }
-
+        // AlphaBar の値が変更された時, segment画像とinput画像のアルファ値を変更する
         private void AlphaBar_ValueChanged(object sender, EventArgs e)
         {
             if (this.painter != null)
@@ -185,12 +197,14 @@ namespace BoulderingSegmentImageGenerator
             }
         }
 
+        // left button 押下時画像を左へ90度回転させる
         private void LeftRotateButton_Click(object sender, EventArgs e)
         {
             this.painter.RotateLeftCurrentImage();
             UpdatePictureBox();
         }
 
+        // right button 押下時画像を右へ90度回転させる
         private void RightRotateButton_Click(object sender, EventArgs e)
         {
             this.painter.RotateRightCurrentImage();
@@ -205,12 +219,14 @@ namespace BoulderingSegmentImageGenerator
             }
         }
 
+        // pictureBoxの画像を更新する
         private void UpdatePictureBox()
         {
             this.painter.UpdateImage();
             this.InputImage.Update();
         }
 
+        // save ボタンの処理
         private void SaveButton_Click(object sender, EventArgs e)
         {
             if (painter == null)
@@ -221,6 +237,7 @@ namespace BoulderingSegmentImageGenerator
             EnableButton();
         }
 
+        // 次の画像へ遷移する
         private void NextButton_Click(object sender, EventArgs e)
         {
             if (this.painter == null)
@@ -231,6 +248,7 @@ namespace BoulderingSegmentImageGenerator
             EnableButton();
         }
 
+        // 前の画像へ遷移する
         private void PrevButton_Click(object sender, EventArgs e)
         {
             if (this.painter == null)
@@ -239,6 +257,15 @@ namespace BoulderingSegmentImageGenerator
             this.painter.UpdateImage();
         }
 
+        // ResetButtonの処理
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            if (painter == null)
+                return;
+            painter.ResetImage();
+        }
+
+        // すべてのボタンを有効化する
         private void EnableButton()
         {
             NextButton.Enabled = true;
@@ -246,8 +273,13 @@ namespace BoulderingSegmentImageGenerator
             LeftRotateButton.Enabled = true;
             RightRotateButton.Enabled = true;
             SaveButton.Enabled = true;
+            ResetButton.Enabled = true;
+            LoadButton.Enabled = true;
+            openButton.Enabled = true;
+            NewButton.Enabled = true;
         }
 
+        // すべてのボタンを無効化する
         private void DisableButton()
         {
             NextButton.Enabled = false;
@@ -255,6 +287,10 @@ namespace BoulderingSegmentImageGenerator
             LeftRotateButton.Enabled = false;
             RightRotateButton.Enabled = false;
             SaveButton.Enabled = false;
+            ResetButton.Enabled = false;
+            LoadButton.Enabled = false;
+            openButton.Enabled = false;
+            NewButton.Enabled = false;
         }
 
         // picturebox の座標を表示している画像の座標系に変換する
@@ -286,17 +322,29 @@ namespace BoulderingSegmentImageGenerator
                 Y0 = (int)((y - dy) * imgW / picW);
             }
 
-            if (X0 < 0 || imgW < X0 || Y0 < 0 || imgH < Y0)
-            {
-                return new Point(-1, -1); // 範囲外をどう表すのがいいか
-            }
-
             return new Point(X0, Y0);
         }
 
-        private void ResetButton_Click(object sender, EventArgs e)
+        // listBoxのアイテムが選択されたらそのフォルダを開く
+        private void InputImageListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (painter == null)
+                return;
 
+            DisableButton();
+            var selectedWorkspace = InputImageListBox.Text;
+            Debug.WriteLine("InputImageListBox Clicked : " + selectedWorkspace);
+
+            // 現在の開いている画像を保存する
+            painter.SaveImage();
+
+            // 選択したファイルを開き, 読み込む
+            painter.OpenWorkspace(selectedWorkspace);
+            painter.LoadImages();
+            InputImage.Image = painter.GetProcessedImage();
+            UpdateInputImageListBox();
+
+            EnableButton();
         }
     }
 }
