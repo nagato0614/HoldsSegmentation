@@ -21,6 +21,8 @@ namespace BoulderingSegmentImageGenerator
         {
             this.originalImageFolderPath = InputImageFolderPath;
             this.pen = new Pen(Params.HoldColor, 1);
+            this.pen.Alignment = PenAlignment.Inset;
+            this.pen.LineJoin = LineJoin.Round;
             Init();
         }
 
@@ -35,6 +37,7 @@ namespace BoulderingSegmentImageGenerator
         // ない場合は新しいワークスペースを作る
         private void Init()
         {
+            this.plotWindow = new PlotWindow();
             var list = GetFolderList();
 
             // 既存のワークスペースがない場合の処理
@@ -320,6 +323,7 @@ namespace BoulderingSegmentImageGenerator
             {
                 Debug.WriteLine("Stroke Points : " + p.ToString());
             }
+            this.UpdateImage();
             strokes.Pop();
         }
 
@@ -333,11 +337,12 @@ namespace BoulderingSegmentImageGenerator
         {
             var drawPoint = TransformPoint(p);
 
-            // 左クリック出ない場合は処理を行わない
+            // 左クリックではない時は処理を行わない
             if (Control.MouseButtons != MouseButtons.Left)
                 return;
             if (this.strokes == null)
                 return;
+
             this.strokes.Peek().Add(drawPoint);
             this.UpdateImage();
         }
@@ -361,6 +366,9 @@ namespace BoulderingSegmentImageGenerator
             {
                 foreach (var stroke in strokes)
                 {
+                    if (stroke.Count <= 1)
+                        continue;
+                    this.plotWindow.AddData(stroke);
                     GraphicsPath path = new GraphicsPath(stroke.ToArray(), Enumerable.Repeat<byte>(1, stroke.Count).ToArray());
                     g.DrawPath(pen, path);
                 }

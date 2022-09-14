@@ -48,5 +48,8 @@ namespace BoulderingSegmentImageGenerator
         private Matrix matrix = new Matrix();
         private PointF oldPoint = PointF.Empty;
         private bool rightButtonDown = false;
+
+        // 描画点をプロットする
+        private PlotWindow plotWindow;
     }
 }
