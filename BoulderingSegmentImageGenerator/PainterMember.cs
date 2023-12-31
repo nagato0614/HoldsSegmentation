@@ -47,9 +47,12 @@ namespace BoulderingSegmentImageGenerator
         // 拡大縮小の変換行列
         private Matrix matrix = new Matrix();
         private PointF oldPoint = PointF.Empty;
-        private bool rightButtonDown = false;
+        private bool middleButtonDown = false;
 
         // 描画点をプロットする
         private PlotWindow plotWindow;
+
+		// 塗りつぶしのとき調査済みのピクセルを保存する
+		private Bitmap beforeImage;
     }
 }

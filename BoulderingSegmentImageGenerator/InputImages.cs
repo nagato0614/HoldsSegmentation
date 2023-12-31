@@ -33,16 +33,24 @@ namespace BoulderingSegmentImageGenerator
             // 画像をトリミングして input folder に移す
             foreach (string file in filess)
             {
-                // 画像のパスを取得
-                var imagePath = Path.Combine(parentFolder.FullName, file);
+				// 保存するファイル名
+				var filename = $"{this.imageworkSpaceName}_{i++}.png";
+
+				// すでにファイルが存在する場合はスキップ
+				if (File.Exists(Path.Combine(inputImagePath, filename)))
+				{
+					continue;
+				}
+
+				// 画像のパスを取得
+				var imagePath = Path.Combine(parentFolder.FullName, file);
                 var image = Image.FromFile(imagePath);
                 var bitmap = new Bitmap(image);
 
                 // 画像の切り取り
                 var trimmedimage = Trimming(bitmap);
 
-                // 画像の保存
-                var filename = $"{this.imageworkSpaceName}_{i++}.png";
+				// 画像の保存
                 var filepath = Path.Combine(inputImagePath, filename);
                 trimmedimage.Save(filepath, ImageFormat.Png);
                 trimmedimage.Dispose();

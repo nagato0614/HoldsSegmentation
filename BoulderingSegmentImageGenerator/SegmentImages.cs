@@ -27,14 +27,22 @@ namespace BoulderingSegmentImageGenerator
 
             string[] filess = Directory.GetFiles(parentFolder.FullName);
             for (int i = 0; i < filess.Length; i++)
-            {
-                // 背景色に設定した画像を生成
-                var img = new Bitmap(Params.ImgWidth, Params.ImgHeight);
+			{
+				// 生成する画像のファイル名
+				var filename = $"{this.imageworkSpaceName}_{i}.png";
+
+				// すでにファイルが存在する場合はスキップ
+				if (File.Exists(Path.Combine(this.pathToWorkspace, this.imageworkSpaceName, filename)))
+				{
+					continue;
+				}
+
+				// 背景色に設定した画像を生成
+				var img = new Bitmap(Params.ImgWidth, Params.ImgHeight);
                 var g = Graphics.FromImage(img);
                 g.Clear(Params.BackgroundColor);
 
                 // 画像をsegmentのワークスペースに保存
-                var filename = $"{this.imageworkSpaceName}_{i}.png";
                 var filepath = Path.Combine(this.pathToWorkspace, this.imageworkSpaceName, filename);
 
                 g.Dispose();
@@ -44,6 +52,5 @@ namespace BoulderingSegmentImageGenerator
                 Debug.WriteLine("generate image : " + filepath);
             }
         }
-
     }
 }

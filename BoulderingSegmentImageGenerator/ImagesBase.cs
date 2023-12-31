@@ -47,7 +47,7 @@ namespace BoulderingSegmentImageGenerator
         {
             GetNumOfImages();
             this.currentImageID = 0;
-            OpenCurrentImage();
+			OpenCurrentImage();
         }
 
         // 新しいワークスペースを作成する
@@ -147,6 +147,12 @@ namespace BoulderingSegmentImageGenerator
             return this.currentImage;
         }
 
+		// 現在オープンしている画像に画像をセットする
+		public void SetCurrentImage(Bitmap img)
+		{
+			this.currentImage = new Bitmap(img);
+		}
+
         // 処理した画像を受け取り保存する
         public void SaveCurrentImage()
         {
@@ -156,6 +162,7 @@ namespace BoulderingSegmentImageGenerator
 
         // 入力画像の処理を記述する
         public abstract void ProcessImages();
+
 
         // 現在オープンしている画像
         protected Bitmap currentImage;

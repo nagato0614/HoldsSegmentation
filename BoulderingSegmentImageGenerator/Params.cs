@@ -17,13 +17,17 @@ namespace BoulderingSegmentImageGenerator
         public static readonly Color BackgroundColor = Color.Red;
         public static readonly Color HoldColor = Color.Green;
         public static readonly Color VolumeColor = Color.Blue;
-
+		public static readonly Color Human = Color.Yellow;
+		public static readonly Color Mat = Color.PaleGreen;
     }
+
     public enum HoldsType_t
     {
         Holds,
         Volume,
         Background,
+		Human,
+		Mat,
     }
 
     public enum PaintSize_t

@@ -1,20 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
-using System.Windows;
-using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Windows.Forms;
 
 namespace BoulderingSegmentImageGenerator
 {
-    public partial class Painter
+	public partial class Painter
     {
 
         public Painter(string InputImageFolderPath, Point PictureBoxLocation)
@@ -37,7 +35,6 @@ namespace BoulderingSegmentImageGenerator
         // ない場合は新しいワークスペースを作る
         private void Init()
         {
-            this.plotWindow = new PlotWindow();
             var list = GetFolderList();
 
             // 既存のワークスペースがない場合の処理
@@ -63,10 +60,20 @@ namespace BoulderingSegmentImageGenerator
             // 画像を読み込み
             LoadCurrentImage();
 
-            // アルファ値を設定し画像を更新する.
-            SetAlpha(50);
+			// 前の画像を保存
+			this.beforeImage = new Bitmap(this.currentSegmentImage);
+
+			// アルファ値を設定し画像を更新する.
+			SetAlpha(50);
             UpdateImage();
         }
+
+		public void Undo()
+		{
+		    this.segmentImages.SetCurrentImage(this.beforeImage);
+			this.currentSegmentImage = this.segmentImages.GetCurrentImage();
+			this.UpdateImage();
+		}
 
         // 既存のワークスペースを開く
         public void OpenWorkspace(string workspaceName)
@@ -263,20 +270,29 @@ namespace BoulderingSegmentImageGenerator
             UpdateImage();
         }
 
-        // pictureboxが右クリックされた時 (画像を移動させる)
-        public void MouseDownRight(Point p)
+        // pictureboxがホイールクリックされたとき (画像を移動させる)
+        public void MouseDownMiddle(Point p)
         {
             Debug.WriteLine("Right Button is down");
             UpdateImage();
 
             oldPoint.X = p.X;
             oldPoint.Y = p.Y;
-            rightButtonDown = true;
+            middleButtonDown = true;
         }
+
+		// Undoように現在の画像を保存する
+		public void SaveCurrentImage()
+		{
+			this.beforeImage = new Bitmap(this.currentSegmentImage);
+		}
 
         // pictureboxが押されたときの処理
         public void MouseDownLeft(Point p)
         {
+			// 現在の画像を保存
+			this.SaveCurrentImage();
+
             // 描画位置を変換行列をもとにずらす
             var drawPoint = TransformPoint(p);
             int width = (int)pen.Width;
@@ -316,6 +332,7 @@ namespace BoulderingSegmentImageGenerator
         }
 
 
+
         // pictureboxからマウスが話されたとき
         public void MouseUpLeft()
         {
@@ -327,9 +344,9 @@ namespace BoulderingSegmentImageGenerator
             strokes.Pop();
         }
 
-        public void MouseUpRight()
+        public void MouseDownMiddle()
         {
-            rightButtonDown = false;
+            middleButtonDown = false;
         }
 
         // pictureBoxでマウスを押下したあと動かした場合の処理
@@ -343,14 +360,21 @@ namespace BoulderingSegmentImageGenerator
             if (this.strokes == null)
                 return;
 
+			// 画像の範囲外のときは処理を行わない
+			if (drawPoint.X < 0 ||
+			drawPoint.Y < 0 ||
+			drawPoint.X >= this.currentSegmentImage.Width ||
+			drawPoint.Y >= this.currentSegmentImage.Height)
+			return;
+
             this.strokes.Peek().Add(drawPoint);
             this.UpdateImage();
         }
 
         // マウスが移動されたときの処理, 移動された距離に合わせて画像をずらす.
-        public void MouseMoveRight(Point p)
+        public void MouseMoveMiddle(Point p)
         {
-            if (!rightButtonDown)
+            if (!middleButtonDown)
                 return;
 
             matrix.Translate(p.X - oldPoint.X, p.Y - oldPoint.Y, MatrixOrder.Append);
@@ -358,18 +382,96 @@ namespace BoulderingSegmentImageGenerator
             oldPoint = p;
         }
 
+		// 右クリックされたときの処理
+		public void MouseDownRight(Point p)
+		{
+			// 画像の座標を取得
+			var drawPoint = TransformPoint(p);
 
-        // 描いた線を描画する
-        private void Drawing()
+			// 画像の範囲外のときは処理を行わない
+			if (drawPoint.X < 0 ||
+			drawPoint.Y < 0 || 
+			drawPoint.X >= this.currentSegmentImage.Width ||
+			drawPoint.Y	>=this.currentSegmentImage.Height)
+					return;
+
+
+			// 画像の色を取得
+			var color = this.currentSegmentImage.GetPixel(drawPoint.X, drawPoint.Y);
+
+			// 前の画像を保存
+			this.beforeImage = new Bitmap(this.currentSegmentImage);
+
+			// 選択したピクセルを中心に色を塗りつぶす
+			FillPenColor(drawPoint, color);
+
+			// 画面を更新
+			this.UpdateImage();
+		}
+
+		// 隣接するピクセルを再帰的に調べて同じ色であれば現在選択したぺんの色に変えていく
+		// ただし、調査済みのピクセルは処理を行わない
+		// 再帰で書くとスタックオーバーフローの可能性があるのでスタックを使って実装
+		private void FillPenColor(Point p, Color start_color)
+		{
+			BitmapData data = this.currentSegmentImage.LockBits(new Rectangle(0, 0, this.currentSegmentImage.Width, this.currentSegmentImage.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+			int bytes = Math.Abs(data.Stride) * this.currentSegmentImage.Height;
+			byte[] rgbValues = new byte[bytes];
+			Marshal.Copy(data.Scan0, rgbValues, 0, bytes);
+
+			HashSet<Point> filledPixel = new HashSet<Point>();
+			Stack<Point> stack = new Stack<Point>();
+			stack.Push(p);
+
+			while (stack.Count != 0)
+			{
+				var point = stack.Pop();
+				if (!filledPixel.Contains(point))
+				{
+					int index = point.Y * data.Stride + point.X * 3;
+
+	 				// 画像の範囲外のときは処理を行わない
+					if (point.X < 0 || point.Y < 0 ||point.X >= this.currentSegmentImage.Width ||point.Y>=this.currentSegmentImage.Height)
+							continue;
+
+					Color color = Color.FromArgb(rgbValues[index + 2], rgbValues[index + 1], rgbValues[index]);
+
+					if (color != start_color)
+						continue;
+
+					rgbValues[index] = pen.Color.B;
+					rgbValues[index + 1] = pen.Color.G;
+					rgbValues[index + 2] = pen.Color.R;
+
+					// 調査済みのピクセルを保存
+					filledPixel.Add(point);
+
+
+					stack.Push(new Point(point.X - 1, point.Y));
+					stack.Push(new Point(point.X + 1, point.Y));
+					stack.Push(new Point(point.X, point.Y - 1));
+					stack.Push(new Point(point.X, point.Y + 1));
+				}
+			}
+
+			Marshal.Copy(rgbValues, 0, data.Scan0, bytes);
+			this.currentSegmentImage.UnlockBits(data);
+		}
+
+
+
+		// 描いた線を描画する
+		private void Drawing()
         {
             using (var g = Graphics.FromImage(this.currentSegmentImage))
             {
                 foreach (var stroke in strokes)
                 {
-                    if (stroke.Count <= 1)
+                    if (stroke.Count < 1)
                         continue;
-                    this.plotWindow.AddData(stroke);
-                    GraphicsPath path = new GraphicsPath(stroke.ToArray(), Enumerable.Repeat<byte>(1, stroke.Count).ToArray());
+                    GraphicsPath path = 
+					new GraphicsPath(stroke.ToArray(), Enumerable.Repeat<byte>(1, stroke.Count).ToArray());
                     g.DrawPath(pen, path);
                 }
             }
@@ -391,6 +493,7 @@ namespace BoulderingSegmentImageGenerator
                 case HoldsType_t.Holds: c = Params.HoldColor; break;
                 case HoldsType_t.Volume: c = Params.VolumeColor; break;
                 case HoldsType_t.Background: c = Params.BackgroundColor; break;
+				case HoldsType_t.Mat: c = Params.Mat; break;
                 default: c = Params.BackgroundColor; break;
             }
             pen.Color = c;
