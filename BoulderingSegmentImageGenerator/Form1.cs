@@ -48,6 +48,14 @@ namespace BoulderingSegmentImageGenerator
 			}
 		}
 
+		private void radioButton1_CheckedChanged(object sender, EventArgs e)
+		{
+			if (this.painter != null)
+			{
+				painter.SetHoldsType(HoldsType_t.Human);
+			}
+		}
+
 		// フォルダオープンボタンが押された時フォルダダイアログを開く
 		private void open_Click(object sender, EventArgs e)
 		{

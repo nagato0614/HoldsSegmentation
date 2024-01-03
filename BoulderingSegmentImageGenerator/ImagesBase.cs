@@ -160,8 +160,23 @@ namespace BoulderingSegmentImageGenerator
             this.currentImage.Save(filepath);
         }
 
-        // 入力画像の処理を記述する
-        public abstract void ProcessImages();
+        protected string[] GetImageFiles()
+        {
+	        Debug.WriteLine("SegmentImages ProcessImage");
+	        // もとの画像がある場所取得
+	        var parentFolder = Directory.GetParent(this.pathToWorkspace);
+	        Debug.WriteLine("read data from : " + parentFolder);
+
+	        string[] filess = Directory.GetFiles(parentFolder.FullName);
+
+	        // ファイルを名前順に取得する
+			Array.Sort(filess, (x, y) => String.Compare(x, y));
+
+			return filess;
+		}
+
+		// 入力画像の処理を記述する
+		public abstract void ProcessImages();
 
 
         // 現在オープンしている画像

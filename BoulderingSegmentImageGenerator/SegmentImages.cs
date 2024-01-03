@@ -20,13 +20,10 @@ namespace BoulderingSegmentImageGenerator
         // すべてbackgroundになっているsegment画像を生成
         public override void ProcessImages()
         {
-            Debug.WriteLine("SegmentImages ProcessImage");
-            // もとの画像がある場所取得
-            var parentFolder = Directory.GetParent(this.pathToWorkspace);
-            Debug.WriteLine("read data from : " + parentFolder);
+	        var filess = this.GetImageFiles();
 
-            string[] filess = Directory.GetFiles(parentFolder.FullName);
-            for (int i = 0; i < filess.Length; i++)
+
+			for (int i = 0; i < filess.Length; i++)
 			{
 				// 生成する画像のファイル名
 				var filename = $"{this.imageworkSpaceName}_{i}.png";
@@ -50,7 +47,9 @@ namespace BoulderingSegmentImageGenerator
                 // png画像として保存
                 img.Save(filepath, ImageFormat.Png);
                 Debug.WriteLine("generate image : " + filepath);
-            }
-        }
+				img.Dispose();
+				System.GC.Collect();
+			}
+		}
     }
 }

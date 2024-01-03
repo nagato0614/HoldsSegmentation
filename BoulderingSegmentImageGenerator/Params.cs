@@ -10,8 +10,8 @@ namespace BoulderingSegmentImageGenerator
         public const string SegmentImageFolderName = "segment";
 
         // 処理する画像サイズ
-        public const int ImgWidth = 500;
-        public const int ImgHeight = 500;
+        public const int ImgWidth = 1000;
+        public const int ImgHeight = 1000;
 
         // セグメンテーションの色
         public static readonly Color BackgroundColor = Color.Red;

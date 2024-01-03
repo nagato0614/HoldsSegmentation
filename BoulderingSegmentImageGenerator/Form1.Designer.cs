@@ -32,8 +32,8 @@
 			this.Holds = new System.Windows.Forms.RadioButton();
 			this.Volume = new System.Windows.Forms.RadioButton();
 			this.HoldsType = new System.Windows.Forms.GroupBox();
-			this.BackgrounButton = new System.Windows.Forms.RadioButton();
 			this.MatRadio = new System.Windows.Forms.RadioButton();
+			this.BackgrounButton = new System.Windows.Forms.RadioButton();
 			this.FolderPath = new System.Windows.Forms.TextBox();
 			this.openButton = new System.Windows.Forms.Button();
 			this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -52,6 +52,7 @@
 			this.ResetButton = new System.Windows.Forms.Button();
 			this.NewButton = new System.Windows.Forms.Button();
 			this.before_image_button = new System.Windows.Forms.Button();
+			this.HumanRadio = new System.Windows.Forms.RadioButton();
 			((System.ComponentModel.ISupportInitialize)(this.InputImage)).BeginInit();
 			this.HoldsType.SuspendLayout();
 			this.PaintSizeBox.SuspendLayout();
@@ -109,6 +110,7 @@
 			// 
 			// HoldsType
 			// 
+			this.HoldsType.Controls.Add(this.HumanRadio);
 			this.HoldsType.Controls.Add(this.MatRadio);
 			this.HoldsType.Controls.Add(this.BackgrounButton);
 			this.HoldsType.Controls.Add(this.Volume);
@@ -116,23 +118,10 @@
 			this.HoldsType.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
 			this.HoldsType.Location = new System.Drawing.Point(12, 69);
 			this.HoldsType.Name = "HoldsType";
-			this.HoldsType.Size = new System.Drawing.Size(195, 173);
+			this.HoldsType.Size = new System.Drawing.Size(195, 230);
 			this.HoldsType.TabIndex = 6;
 			this.HoldsType.TabStop = false;
 			this.HoldsType.Text = "HoldsType";
-			// 
-			// BackgrounButton
-			// 
-			this.BackgrounButton.AutoSize = true;
-			this.BackgrounButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-			this.BackgrounButton.Location = new System.Drawing.Point(6, 100);
-			this.BackgrounButton.Name = "BackgrounButton";
-			this.BackgrounButton.Size = new System.Drawing.Size(153, 30);
-			this.BackgrounButton.TabIndex = 5;
-			this.BackgrounButton.TabStop = true;
-			this.BackgrounButton.Text = "Background";
-			this.BackgrounButton.UseVisualStyleBackColor = true;
-			this.BackgrounButton.CheckedChanged += new System.EventHandler(this.BackgrounButton_CheckedChanged);
 			// 
 			// MatRadio
 			// 
@@ -146,6 +135,19 @@
 			this.MatRadio.Text = "Mat";
 			this.MatRadio.UseVisualStyleBackColor = true;
 			this.MatRadio.CheckedChanged += new System.EventHandler(this.MatRadio_CheckedChanged);
+			// 
+			// BackgrounButton
+			// 
+			this.BackgrounButton.AutoSize = true;
+			this.BackgrounButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+			this.BackgrounButton.Location = new System.Drawing.Point(6, 100);
+			this.BackgrounButton.Name = "BackgrounButton";
+			this.BackgrounButton.Size = new System.Drawing.Size(153, 30);
+			this.BackgrounButton.TabIndex = 5;
+			this.BackgrounButton.TabStop = true;
+			this.BackgrounButton.Text = "Background";
+			this.BackgrounButton.UseVisualStyleBackColor = true;
+			this.BackgrounButton.CheckedChanged += new System.EventHandler(this.BackgrounButton_CheckedChanged);
 			// 
 			// FolderPath
 			// 
@@ -171,7 +173,7 @@
 			// 
 			this.PaintSizeBox.Controls.Add(this.paintSizeBar);
 			this.PaintSizeBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-			this.PaintSizeBox.Location = new System.Drawing.Point(12, 248);
+			this.PaintSizeBox.Location = new System.Drawing.Point(12, 305);
 			this.PaintSizeBox.Name = "PaintSizeBox";
 			this.PaintSizeBox.Size = new System.Drawing.Size(195, 106);
 			this.PaintSizeBox.TabIndex = 7;
@@ -227,7 +229,7 @@
 			// 
 			this.InputImageGroup.Controls.Add(this.AlphaBar);
 			this.InputImageGroup.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-			this.InputImageGroup.Location = new System.Drawing.Point(12, 370);
+			this.InputImageGroup.Location = new System.Drawing.Point(12, 427);
 			this.InputImageGroup.Name = "InputImageGroup";
 			this.InputImageGroup.Size = new System.Drawing.Size(195, 100);
 			this.InputImageGroup.TabIndex = 19;
@@ -239,7 +241,7 @@
 			this.rotateBox.Controls.Add(this.RightRotateButton);
 			this.rotateBox.Controls.Add(this.LeftRotateButton);
 			this.rotateBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-			this.rotateBox.Location = new System.Drawing.Point(12, 485);
+			this.rotateBox.Location = new System.Drawing.Point(12, 542);
 			this.rotateBox.Name = "rotateBox";
 			this.rotateBox.Size = new System.Drawing.Size(195, 128);
 			this.rotateBox.TabIndex = 20;
@@ -271,7 +273,7 @@
 			// SaveButton
 			// 
 			this.SaveButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-			this.SaveButton.Location = new System.Drawing.Point(18, 801);
+			this.SaveButton.Location = new System.Drawing.Point(18, 858);
 			this.SaveButton.Name = "SaveButton";
 			this.SaveButton.Size = new System.Drawing.Size(132, 36);
 			this.SaveButton.TabIndex = 21;
@@ -282,7 +284,7 @@
 			// NextButton
 			// 
 			this.NextButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-			this.NextButton.Location = new System.Drawing.Point(18, 721);
+			this.NextButton.Location = new System.Drawing.Point(18, 778);
 			this.NextButton.Name = "NextButton";
 			this.NextButton.Size = new System.Drawing.Size(132, 34);
 			this.NextButton.TabIndex = 22;
@@ -293,7 +295,7 @@
 			// PrevButton
 			// 
 			this.PrevButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-			this.PrevButton.Location = new System.Drawing.Point(18, 761);
+			this.PrevButton.Location = new System.Drawing.Point(18, 818);
 			this.PrevButton.Name = "PrevButton";
 			this.PrevButton.Size = new System.Drawing.Size(132, 34);
 			this.PrevButton.TabIndex = 23;
@@ -304,7 +306,7 @@
 			// ResetButton
 			// 
 			this.ResetButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-			this.ResetButton.Location = new System.Drawing.Point(18, 628);
+			this.ResetButton.Location = new System.Drawing.Point(18, 685);
 			this.ResetButton.Name = "ResetButton";
 			this.ResetButton.Size = new System.Drawing.Size(132, 34);
 			this.ResetButton.TabIndex = 24;
@@ -327,13 +329,26 @@
 			// before_image_button
 			// 
 			this.before_image_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-			this.before_image_button.Location = new System.Drawing.Point(18, 904);
+			this.before_image_button.Location = new System.Drawing.Point(18, 961);
 			this.before_image_button.Name = "before_image_button";
 			this.before_image_button.Size = new System.Drawing.Size(132, 36);
 			this.before_image_button.TabIndex = 26;
 			this.before_image_button.Text = "Before";
 			this.before_image_button.UseVisualStyleBackColor = true;
 			this.before_image_button.Click += new System.EventHandler(this.before_image_button_Click);
+			// 
+			// HumanRadio
+			// 
+			this.HumanRadio.AutoSize = true;
+			this.HumanRadio.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
+			this.HumanRadio.Location = new System.Drawing.Point(6, 172);
+			this.HumanRadio.Name = "HumanRadio";
+			this.HumanRadio.Size = new System.Drawing.Size(108, 30);
+			this.HumanRadio.TabIndex = 7;
+			this.HumanRadio.TabStop = true;
+			this.HumanRadio.Text = "Human";
+			this.HumanRadio.UseVisualStyleBackColor = true;
+			this.HumanRadio.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
 			// 
 			// BoulderingSegmentImageGenerator
 			// 
@@ -404,6 +419,7 @@
         private System.Windows.Forms.Button NewButton;
 		private System.Windows.Forms.Button before_image_button;
 		private System.Windows.Forms.RadioButton MatRadio;
+		private System.Windows.Forms.RadioButton HumanRadio;
 	}
 }
 
